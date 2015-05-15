@@ -1,0 +1,45 @@
+#!/bin/bash
+
+usage() {
+    echo "shell-script [-t] [-o some-arg]"
+    echo "-t | --test             -- some option"
+    echo "-o some-arg             -- an option with argument"
+    echo "--help                  -- even more help"
+}
+
+if [ $# -lt 1 ]; then
+    usage
+    exit 1
+fi
+
+validateArg() {
+    if [ $1 -eq 0 ]; then
+	echo "$2"
+	exit 1
+    fi
+}
+
+while [ $# -ne 0 ]; do
+    NUM_ARGS_BEFORE=$#	
+    if [ x${1} == x"-t" ]; then
+    	#do something when option "-t" is passed
+	echo "you have passed option -t"
+        shift
+    fi	
+    if [ x${1} == x"-o" ]; then
+        shift
+	validateArg $# "-o requires an additional option"
+	#do something with the argument $1
+	echo "you have passed argument '$1' to option -o"
+        shift
+    fi   
+    if [ x${1} == x"--help" ]; then
+        echo "you can display some help message"
+	exit 0
+    fi 
+    NUM_ARGS_AFTER=$#
+    if [ $NUM_ARGS_BEFORE -eq $NUM_ARGS_AFTER ]; then
+        echo "Invalid argument: $1"
+	exit 1
+    fi
+done
